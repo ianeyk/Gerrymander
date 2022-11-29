@@ -11,8 +11,8 @@ district_outlines <- st_read("raw_data/vtds20g_2020/VTDs20G_2020.shp")
 mapview(district_outlines)
 
 # estimate first order adjacency matrix
-district_adjacency_mat <- nb2mat(poly2nb(district_outlines), style = "B")
-district_adjacency_mat[1:10, 1:10]
+nb_result <- poly2nb(district_outlines, queen = FALSE)
+district_adjacency_mat <- nb2mat(nb_result, style = "B")
 
 district_graph <- graph.adjacency(district_adjacency_mat)
 district_edge_list <- get.edgelist(district_graph)
