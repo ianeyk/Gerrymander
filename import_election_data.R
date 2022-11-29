@@ -11,5 +11,11 @@ election <-
     voter_reg_raw %>% 
       select(VTDKEY, Voter_Registration, Turnout), 
     by = c("VTDKEY" = "VTDKEY")
+  ) %>% 
+  left_join(
+    voter_pop_raw %>% 
+      select(VTDKEY, VTD, vap, anglovap, nanglovap), 
+    by = c("VTDKEY" = "VTDKEY")
   )
 
+write.csv(election, file = "district_demographics.csv")

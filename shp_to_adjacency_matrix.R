@@ -5,7 +5,7 @@ library(spdep)
 library(igraph)
 
 # data
-district_outlines <- st_read("raw_data/vtds_22p/VTDs_22P.shp")
+district_outlines <- st_read("raw_data/vtds20g_2020/VTDs20G_2020.shp")
 
 # display data
 mapview(district_outlines)
