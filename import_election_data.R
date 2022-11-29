@@ -2,6 +2,7 @@ library(tidyverse)
 
 election_raw <- read.csv("2020_general_election_data/president.csv")
 voter_reg_raw <- read.csv("2020_general_election_data/voter data.csv")
+voter_pop_raw <- read.csv("2020_general_election_data/vtds20g_pop.txt")
 
 election <- 
   election_raw %>% 
