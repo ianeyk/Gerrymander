@@ -24,7 +24,7 @@ u = root;
 
 for node = 1:length(nodes)
     % first, if the node is already in T, then skip it
-    if ~any(T.Edges.EndNodes == node, "all") & length(T.Edges.EndNodes) > 0
+    if any(T.Edges.EndNodes == node, "all") & length(T.Edges.EndNodes) > 0
         continue
     end
     S = digraph; % intermediate spanning tree
@@ -32,9 +32,9 @@ for node = 1:length(nodes)
     
     stop_while = false;
     while ~stop_while
-        stop_while = any(T.Edges.EndNodes == u, "all") | length(S.Edges.EndNodes) > 1000;
+        next_node = randsample(find(A(u, :)), 1);
+        stop_while = any(T.Edges.EndNodes == next_node, "all") | length(S.Edges.EndNodes) > 1000;
         if (~stop_while | true)
-            next_node = randsample(find(A(u, :)), 1);
             
             alpha = S.Edges.EndNodes(:, 1) == next_node;
             if any(alpha)
@@ -47,14 +47,11 @@ for node = 1:length(nodes)
         end
     end
 
-    T = addedge(T, S.Edges); % TODO: make sure this works, because S is directed and T is undirected
+%     overlapping_nodes = intersect(S.Edges.EndNodes(:), T.Edges.EndNodes(:))
+
+    T = addedge(T, S.Edges);
 
     n_edges_in_T = size(T.Edges.EndNodes)
-%     S = addedge(S, u, next_node);
-
-%     if any(S.nodes == next_node)
-%         S = addedge(S, u, next_node);
-%     end
 
 end
 
