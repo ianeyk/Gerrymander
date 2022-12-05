@@ -17,7 +17,8 @@ library(tidyverse)
 
 biden_trump_sum <- 
   election %>% 
-    select(CNTYVTD, vap, Biden, Trump) %>% 
+    # select(CNTYVTD, vap, Biden, Trump) %>% 
+    select(VTDKEY, vap, Biden, Trump) %>% 
     na.omit(vap) %>% 
     mutate(Biden_Trump_sum = Biden + Trump, .keep = "unused") %>% 
     mutate(vap_turnout = Biden_Trump_sum / vap) %>% 
