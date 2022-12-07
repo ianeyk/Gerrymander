@@ -18,6 +18,6 @@ election <-
     by = c("VTDKEY" = "VTDKEY")
   )
 
-save(election, file = "election_data.Rdata")
-write.csv(election, file = "district_demographics.csv")
+save(election, file = "csv_and_matfiles/election_data.Rdata")
+write.csv(election, file = "csv_and_matfiles/district_demographics.csv")
 

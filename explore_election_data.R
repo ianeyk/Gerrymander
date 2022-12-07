@@ -1,4 +1,4 @@
-load("election_data.Rdata")
+load("csv_and_matfiles/election_data.Rdata")
 
 # show that for a given VTD, there are multiple VTDKEY's in different counties
 election %>% 

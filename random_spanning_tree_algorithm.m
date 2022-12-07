@@ -1,12 +1,12 @@
 %% Generate Graph
-edges = readtable("district_edge_list.csv");
+edges = readtable("csv_and_matfiles/district_edge_list.csv");
 edges = edges(:, 2:3);
 edges_array = table2array(edges);
 nodes = unique(edges_array);
 EdgeTable = table(edges_array,'VariableNames',{'EndNodes'});
 
 
-population = readtable("district_demographics.csv");
+population = readtable("csv_and_matfiles/district_demographics.csv");
 population = population(:, ["VTDKEY", "Biden", "Trump", "Voter_Registration", "Turnout", "vap", "anglovap", "FENAME"]);
 
 NodeTable = table(nodes, 'VariableNames',{'VTDKEY'});
@@ -59,3 +59,4 @@ end
 %% plot
 T
 plot(T);
+save("matfiles/example_spanning_tree.mat", "G", "T");
