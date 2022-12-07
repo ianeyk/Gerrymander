@@ -60,4 +60,4 @@ end
 %% plot
 T
 plot(T);
-save("matfiles/example_spanning_tree.mat", "G", "T");
+save("csv_and_matfiles/example_spanning_tree.mat", "G", "T");
