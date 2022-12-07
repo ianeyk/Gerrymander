@@ -23,7 +23,7 @@ root = randsample(nodes, 1);
 
 T = graph(); % final spanning tree
 u = root;
-
+disp("Working... You will not see the first output for a few seconds.")
 for node = 1:length(nodes)
     % first, if the node is already in T, then skip it
     if any(T.Edges.EndNodes == node, "all") & length(T.Edges.EndNodes) > 0

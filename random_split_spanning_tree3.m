@@ -22,13 +22,13 @@ p_interspersed = p2(:).';
 % first_half_of_tree = n(1:halfway_index);
 % flip_ordering = flip(first_half_of_tree);
 
-population_target = sum(vaps_on_path) ./ 2;
+population_target = sum(table2array(G.Nodes(:, "vap"))) ./ 2;
 population_bounds = population_target .* [0.95, 1.05];
 
 figure(1);
 clf;
 edges = T.Edges.EndNodes;
-for ii = 1:length(p)
+for ii = 1:length(p-1)
     T_temp = T;
     T_temp = rmedge(T_temp, p_interspersed(ii), p(find(p == p_interspersed(ii)) + 1));
     first_half = conncomp(T_temp) == 1;
@@ -37,6 +37,7 @@ for ii = 1:length(p)
     
     clf;
     h = plot(T);
+%     h = plot(T, 'XData', centroids(:,1), 'YData', centroids(:,2));
     highlight(h, first_half, "EdgeColor", "red", "NodeColor", "red");
 %     highlight(h, p_interspersed, "EdgeColor", "red", "NodeColor", "red");
 %     break;
@@ -44,7 +45,13 @@ for ii = 1:length(p)
     pause(.1);
     ii
 
-    if abs(error) < 15; % percent
+    if abs(error) < 2 % percent
         break
     end
 end
+%% plot geographically
+figure(2);
+clf;
+h2 = plot(T, 'XData', centroids(:,1), 'YData', centroids(:,2));
+highlight(h2, first_half, "EdgeColor", "red", "NodeColor", "red");
+
