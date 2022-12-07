@@ -4,7 +4,8 @@ edges = edges(:, 2:3);
 edges_array = table2array(edges);
 nodes = unique(edges_array);
 EdgeTable = table(edges_array,'VariableNames',{'EndNodes'});
-
+centroids = readmatrix("csv_and_matfiles/district_centroids.csv");
+centroids = centroids(2:end, 2:end);
 
 population = readtable("csv_and_matfiles/district_demographics.csv");
 population = population(:, ["VTDKEY", "Biden", "Trump", "Voter_Registration", "Turnout", "vap", "anglovap", "FENAME"]);
@@ -12,9 +13,9 @@ population = population(:, ["VTDKEY", "Biden", "Trump", "Voter_Registration", "T
 NodeTable = table(nodes, 'VariableNames',{'VTDKEY'});
 NodeTable = join(NodeTable,population);
 
-G = graph(EdgeTable, NodeTable);
+G = simplify(graph(EdgeTable, NodeTable));
 A = adjacency(G);
-% plot(G)
+plot(simplify(G), 'XData', centroids(:,1), 'YData', centroids(:,2));
 %% Spanning Tree Algorithm
 G2 = G;
 
