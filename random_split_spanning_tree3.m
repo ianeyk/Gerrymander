@@ -1,6 +1,8 @@
 %% Generate longest diameter path
+centroids = readmatrix("csv_and_matfiles/district_centroids.csv");
+centroids = centroids(2:end, 2:end);
 
-load("csv_and_matfiles/example_spanning_tree.mat"); 
+load("csv_and_matfiles/example_spanning_tree.mat");
 % G: original graph. Has a table containing voting-age population (vap) and other demographics.
 % T: spanning tree on G generated previously.
 
