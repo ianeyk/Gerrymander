@@ -13,6 +13,7 @@ NodeTable = table(nodes, 'VariableNames',{'VTDKEY'});
 NodeTable = join(NodeTable,population);
 
 G = graph(EdgeTable, NodeTable);
+A = adjacency(G);
 % plot(G)
 %% Spanning Tree Algorithm
 G2 = G;
