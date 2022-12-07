@@ -15,7 +15,7 @@ NodeTable = join(NodeTable,population);
 
 G = simplify(graph(EdgeTable, NodeTable));
 A = adjacency(G);
-plot(simplify(G), 'XData', centroids(:,1), 'YData', centroids(:,2));
+plot(G, 'XData', centroids(:,1), 'YData', centroids(:,2));
 %% Spanning Tree Algorithm
 G2 = G;
 
@@ -35,7 +35,7 @@ for node = 1:length(nodes)
     stop_while = false;
     while ~stop_while
         next_node = randsample(find(A(u, :)), 1);
-        stop_while = any(T.Edges.EndNodes == next_node, "all") | length(S.Edges.EndNodes) > 1000;
+        stop_while = any(T.Edges.EndNodes == next_node, "all") | length(S.Edges.EndNodes) > 2000;
         if (~stop_while | true)
             
             alpha = S.Edges.EndNodes(:, 1) == next_node;
