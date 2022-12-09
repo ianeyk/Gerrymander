@@ -10,12 +10,20 @@ centroids = centroids(2:end, 2:end);
 population = readtable("csv_and_matfiles/district_demographics.csv");
 population = population(:, ["VTDKEY", "Biden", "Trump", "Voter_Registration", "Turnout", "vap", "anglovap", "FENAME"]);
 
-NodeTable = table(nodes, 'VariableNames',{'VTDKEY'});
+NodeTable = table(nodes, 'VariableNames', {'VTDKEY'});
 NodeTable = join(NodeTable,population);
 
 G = simplify(graph(EdgeTable, NodeTable));
 A = adjacency(G);
-plot(G, 'XData', centroids(:,1), 'YData', centroids(:,2));
+% plot(G, 'XData', centroids(:,1), 'YData', centroids(:,2));
+
+county_names = unique(G.Nodes.FENAME)
+for jj = 1:length(county_names)
+    county_name = county_names(jj)
+%     strcmp(G.Nodes.FENAME, county_name)
+    G.Nodes.starting_districts(strcmp(G.Nodes.FENAME, county_name)) = jj
+end
+
 %% Spanning Tree Algorithm
 G2 = G;
 
@@ -40,7 +48,7 @@ for node = 1:length(nodes)
             
             alpha = S.Edges.EndNodes(:, 1) == next_node;
             if any(alpha)
-                assert(sum(alpha == 1))
+                assert(sum(alpha) == 1)
                 S = rmedge(S, find(alpha));
             end
             S = addedge(S, u, next_node); % add new edge
@@ -55,9 +63,11 @@ for node = 1:length(nodes)
 
     n_edges_in_T = size(T.Edges.EndNodes)
 
+    plot(T, 'XData', centroids(1:max(T.Edges.EndNodes,"all"), 1), 'YData', centroids(1:max(T.Edges.EndNodes, "all"), 2));
 end
 
 %% plot
 T
-plot(T);
+% plot(T);
+plot(T, 'XData', centroids(:,1), 'YData', centroids(:,2));
 save("csv_and_matfiles/example_spanning_tree.mat", "G", "T");

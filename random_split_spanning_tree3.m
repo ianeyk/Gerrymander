@@ -62,7 +62,7 @@ for ii = 1:length(p) - 1
     drawnow;
     pause(.1);
 
-    if abs(error) < 2 % percent
+    if abs(error) < 8 % percent
         break
     end
 end
