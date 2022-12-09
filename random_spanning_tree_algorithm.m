@@ -42,7 +42,14 @@ for node = 1:length(nodes)
     
     stop_while = false;
     while ~stop_while
-        next_node = randsample(find(A(u, :)), 1);
+        adjacent_nodes = find(A(u, :));
+        if length(adjacent_nodes) == 1
+            next_node = adjacent_nodes
+        else
+            next_node = randsample(find(A(u, :)), 1);
+        end
+%         Gedges = table2array(G.Edges);
+%         assert(sum((Gedges(:, 1) == u & Gedges(:, 2) == next_node) | (Gedges(:, 2) == u & Gedges(:, 1) == next_node)) == 1);
         stop_while = any(T.Edges.EndNodes == next_node, "all") | length(S.Edges.EndNodes) > 2000;
         if (~stop_while | true)
             
@@ -61,9 +68,9 @@ for node = 1:length(nodes)
 
     T = addedge(T, S.Edges);
 
-    n_edges_in_T = size(T.Edges.EndNodes)
+    n_nodes_in_T = size(T.Edges.EndNodes, 1)
 
-    plot(T, 'XData', centroids(1:max(T.Edges.EndNodes,"all"), 1), 'YData', centroids(1:max(T.Edges.EndNodes, "all"), 2));
+    plot(T, 'XData', centroids(1:max(T.Edges.EndNodes(:)), 1), 'YData', centroids(1:max(T.Edges.EndNodes(:)), 2));
 end
 
 %% plot
