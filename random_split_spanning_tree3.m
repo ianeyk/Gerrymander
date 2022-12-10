@@ -32,6 +32,8 @@ midpoint = length(p) / 2;
 p2 = [flip(p(1:midpoint)); p(midpoint + 1:end)];
 p_order = p2(:).';
 
+p_idx = round(length(p) ./ 2);
+
 %% Find balanced splitting point
 
 population_target = sum(table2array(G.Nodes(:, "vap"))) ./ 2; % total population / 2
@@ -39,18 +41,35 @@ population_target = sum(table2array(G.Nodes(:, "vap"))) ./ 2; % total population
 
 figure(1);
 clf;
+prev_error = 100; % percent
+stop_iteration = 0;
+p_direction = 1; % positive or negative
 for ii = 1:length(p) - 1
-
-    T_temp = T; % create a throwaway (temporary) graph on which we will remove an edge
-    % remove the next edge on the re-ordered path p
-    T_temp = rmedge(T_temp, p_order(ii), p(find(p == p_order(ii)) + 1));
+    
+    T_temp = rmedge(T, p(p_idx), p(p_idx + p_direction)); % create a copy of T which we can remove edges from
 
     first_half = conncomp(T_temp) == 1; % find indices of nodes in the first connected component
     pop_of_first_half = sum(table2array(G.Nodes(first_half, "vap"))); % find the voting-age population among the first half
-    error = (pop_of_first_half - population_target) ./ population_target .* 100; % percent difference from desired population
+    percent_error = (pop_of_first_half - population_target) ./ population_target .* 100; % percent difference from desired population
     
+    if abs(percent_error) > abs(prev_error)
+        p_idx = p_idx - p_direction; % undo the last step
+        p_direction = -p_direction; % change directions
+        stop_iteration = stop_iteration + 1;
+        
+        if stop_iteration >= 2
+            % recalculate nodes in the first half
+            T_temp = rmedge(T, p(p_idx), p(p_idx + p_direction)); % create a copy of T which we can remove edges from
+            first_half = conncomp(T_temp) == 1; % find indices of nodes in the first connected component
+            disp("Minimum error reached.")
+            fprintf("Minimum error margin was %.2f\n", percent_error)
+            break
+        end
+    end
+    prev_error = percent_error;
+
     iteration = ii; % for display
-    disp(table(iteration, error))
+    disp(table(iteration, percent_error))
 
     % Plot spanning tree with nodes colored.
     % Uncomment the first h= line to plot nodes as an abstract spanning tree
@@ -62,9 +81,10 @@ for ii = 1:length(p) - 1
     drawnow;
     pause(.1);
 
-    if abs(error) < 8 % percent
-        break
-    end
+%     if abs(percent_error) < 8 % percent
+%         break
+%     end
+    p_idx = p_idx + p_direction;
 end
 %% Plot geographically
 figure(2);
