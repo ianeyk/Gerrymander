@@ -62,7 +62,7 @@ for ii = 1:length(p) - 1
             T_temp = rmedge(T, p(p_idx), p(p_idx + p_direction)); % create a copy of T which we can remove edges from
             first_half = conncomp(T_temp) == 1; % find indices of nodes in the first connected component
             disp("Minimum error reached.")
-            fprintf("Minimum error margin was %.2f\n", percent_error)
+            fprintf("Minimum error margin was %.2f percent\n", percent_error)
             break
         end
     end
