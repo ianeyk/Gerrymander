@@ -16,7 +16,7 @@ while length(unique(G_iter.Nodes.district_id)) > 5
     district1 = D.Edges.EndNodes(randsample(1:length(D.Edges.EndNodes(:, 1)), 1));
     
     AD = adjacency(D);
-    adjacent_nodes = find(AD(district1, :)); % get a list of nodes adjacent to u from the adjacency matrix
+    adjacent_nodes = find(AD(district1, :)); % get a list of nodes adjacent to district1 from the adjacency matrix
     % This if statement is needed because randsample returns a different value if the input has length 1 vs. length > 1
     if length(adjacent_nodes) == 1
         district2 = adjacent_nodes;
@@ -27,10 +27,21 @@ while length(unique(G_iter.Nodes.district_id)) > 5
 %     district1 = districts_to_combine(dd, 1);
 %     district2 = districts_to_combine(dd, 2);
     G_iter.Nodes.district_id(G_iter.Nodes.district_id == district2) = district1;
-len_unique = length(unique(G_iter.Nodes.district_id));
+len_unique = length(unique(G_iter.Nodes.district_id))
 end
 %% 
+unique_district_ids = unique(G_iter.Nodes.district_id)
+unique_districts = zeros(length(G_iter.Nodes.district_id), 1);
+for uu = 1:length(unique_district_ids)
+    unique_district_id = unique_district_ids(uu);
+    unique_districts(G_iter.Nodes.district_id == unique_district_id) = uu;
+end
+G_iter.Nodes.district_id = unique_districts;
+
 D = find_all_adjacent_districts(G_iter, G_iter, graph(), unique(G_iter.Nodes.district_id), true);
+
+plt = plot(G_iter, 'XData', centroids(:,1), 'YData', centroids(:,2));
+plt.NodeCData = unique_districts;
 
 %%
 image_series_name = randi(10.^4);
@@ -41,6 +52,7 @@ try
 
 T = graph();
 while (length(T.Edges.EndNodes) < 1) % | (max(conncomp(T)) > 1)
+    D = find_all_adjacent_districts(G_iter, G_iter, graph(), unique(G_iter.Nodes.district_id), true);
     two_district_ids = D.Edges.EndNodes(randsample(length(D.Edges.EndNodes), 1), :);
     
     H = subgraph(G_iter, G_iter.Nodes.district_id == two_district_ids(1) | G_iter.Nodes.district_id == two_district_ids(2));

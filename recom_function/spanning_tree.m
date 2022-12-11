@@ -51,6 +51,6 @@ function T = spanning_tree(G)
         % Add all edges in graph S to graph T
         T = addedge(T, S.Edges);
     
-        n_nodes_in_T = size(T.Edges.EndNodes, 1) % for display
+        n_nodes_in_T = size(T.Edges.EndNodes, 1); % for display
     end
 end
