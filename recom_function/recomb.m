@@ -7,23 +7,40 @@ G_iter = G;
 D_old = graph();
 D = find_all_adjacent_districts(G, G_iter, D_old, 1:max(G.Nodes.district_id), true);
 
-n_districts_to_combine = 700;
-districts_to_combine = D.Edges.EndNodes(randsample(1:length(D.Edges.EndNodes(:, 1)), n_districts_to_combine), :);
-for dd = 1:n_districts_to_combine
-    district1 = districts_to_combine(dd, 1);
-    district2 = districts_to_combine(dd, 2);
-    G.Nodes.district_id(G.Nodes.district_id == district2) = district1;
+%%
+
+n_districts_to_combine = 900;
+D_nodes = unique(D.Edges.EndNodes)
+districts_to_combine = D_nodes(randsample(1:length(D_nodes), n_districts_to_combine, true));
+while length(unique(G_iter.Nodes.district_id)) > 5
+    district1 = D.Edges.EndNodes(randsample(1:length(D.Edges.EndNodes(:, 1)), 1));
+    
+    AD = adjacency(D);
+    adjacent_nodes = find(AD(district1, :)); % get a list of nodes adjacent to u from the adjacency matrix
+    % This if statement is needed because randsample returns a different value if the input has length 1 vs. length > 1
+    if length(adjacent_nodes) == 1
+        district2 = adjacent_nodes;
+    else
+        district2 = randsample(adjacent_nodes, 1);
+    end
+
+%     district1 = districts_to_combine(dd, 1);
+%     district2 = districts_to_combine(dd, 2);
+    G_iter.Nodes.district_id(G_iter.Nodes.district_id == district2) = district1;
+len_unique = length(unique(G_iter.Nodes.district_id))
 end
-len_unique = length(unique(G.Nodes.district_id))
 %%
 recomb_iterations = 100;
 for recomb_iteration = 1:recomb_iterations
 recomb_iteration
 
+D = find_all_adjacent_districts(G, D, graph(), 5, true);
+
 T = graph();
 while (length(T.Edges.EndNodes) < 1) % | (max(conncomp(T)) > 1)
-    two_district_ids = D.Edges.EndNodes(randsample(length(D.Edges.EndNodes), 1), :);
-    H = subgraph(G, G.Nodes.district_id == two_district_ids(1) | G.Nodes.district_id == two_district_ids(2));
+    two_district_ids = D.Edges.EndNodes(randsample(length(D.Edges.EndNodes), 1), :)
+    
+    H = subgraph(G_iter, G_iter.Nodes.district_id == two_district_ids(1) | G_iter.Nodes.district_id == two_district_ids(2));
 
 %     disp("More than one connected component or returned an empty tree. Trying again")
     disp("Returned an empty tree. Trying again")
@@ -47,7 +64,6 @@ for node = 1:length(H.Nodes.VTDKEY)
     end
 end
 
-clf;
 plt = plot(G_iter, 'XData', centroids(:,1), 'YData', centroids(:,2));
 plt.NodeCData = G_iter.Nodes.district_id;
 colorbar
