@@ -40,7 +40,7 @@ function T = spanning_tree(G)
                 assert(sum(node_already_connected) == 1) % each node should have only one connection
                 S = rmedge(S, find(node_already_connected)); % remove the old connection before adding the new edge
             end
-            S = addedge(S, u, next_node) % add new edge
+            S = addedge(S, u, next_node); % add new edge
             
             u = next_node;
         end

@@ -4,13 +4,22 @@ function D = find_all_adjacent_districts(G, old_G, old_D, districts_to_find, ski
 
     n_districts = max(G.Nodes.district_id);
 
+%     if skip_delete
+%         D = graph();
+%         for ii = 1:length(districts_to_find)
+%             district_id = districts_to_find(ii);
+%             D = addnode(D, table(district_id))
+%         end
+%     else
+        D = old_D;
+%     end
+
 
     % start by removing all the bad edges from old_D
     old_A = adjacency(old_G);
-    D = old_D;
     for kk = 1:length(districts_to_find)
         district_1 = districts_to_find(kk);
-        district_1_nodes = find(G.Nodes.district_id == district_1)
+        district_1_nodes = find(G.Nodes.district_id == district_1);
 
         % remove old edges
         if ~skip_delete
@@ -38,6 +47,8 @@ function D = find_all_adjacent_districts(G, old_G, old_D, districts_to_find, ski
     end
 
     D = simplify(D);
-    D
-    assert(size(D.Nodes, 1) == n_districts)
+    if ~(size(D.Nodes, 1) == n_districts)
+        disp("Number of nodes does not line up.")
+        n_districts
+    end
 end
