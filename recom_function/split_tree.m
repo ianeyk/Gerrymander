@@ -56,7 +56,7 @@ function first_half = split_tree(G, T)
             p_direction = -p_direction; % change directions
             stop_iteration = stop_iteration + 1;
             
-            if stop_iteration >= 2
+            if stop_iteration >= 3
                 % recalculate nodes in the first half
                 T_temp = rmedge(T, p(p_idx), p(p_idx + p_direction)); % create a copy of T which we can remove edges from
                 first_half = conncomp(T_temp) == 1; % find indices of nodes in the first connected component
@@ -73,12 +73,12 @@ function first_half = split_tree(G, T)
         % Plot spanning tree with nodes colored.
         % Uncomment the first h= line to plot nodes as an abstract spanning tree
         % Uncomment the second h= line to plot nodes as districts in their geographic locations
-        clf;
-        h = plot(T);
+%         clf;
+%         h = plot(T);
         % h = plot(T, 'XData', centroids(:,1), 'YData', centroids(:,2));
-        highlight(h, first_half, "EdgeColor", "red", "NodeColor", "red");
-        drawnow;
-        pause(.1);
+%         highlight(h, first_half, "EdgeColor", "red", "NodeColor", "red");
+%         drawnow;
+%         pause(.1);
     
     %     if abs(percent_error) < 8 % percent
     %         break

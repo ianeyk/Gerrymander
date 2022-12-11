@@ -27,7 +27,9 @@ plot(G, 'XData', centroids(:,1), 'YData', centroids(:,2));
 county_names = unique(G.Nodes.FENAME);
 for idx = 1:length(county_names)
     county_name = county_names(idx);
-    G.Nodes.district_id(strcmp(G.Nodes.FENAME, county_name)) = idx;
+    newName = extractBetween(G.Nodes.FENAME, 1, 2);
+%     G.Nodes.district_id(strcmp(G.Nodes.FENAME, county_name)) = idx;
+    G.Nodes.district_id(strcmp(newName, county_name(1))) = idx;
 end
 
-save("recom_function/recomb_initial_state.mat");
+save("recomb_initial_state.mat");

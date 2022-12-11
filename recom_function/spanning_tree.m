@@ -18,6 +18,7 @@ function T = spanning_tree(G)
         u = node; % starting node
     
         stop_while = false;
+        increment = 1;
         while ~stop_while
             adjacent_nodes = find(A(u, :)); % get a list of nodes adjacent to u from the adjacency matrix
     
@@ -32,8 +33,8 @@ function T = spanning_tree(G)
             % Gedges = table2array(G.Edges);
             % assert(sum((Gedges(:, 1) == u & Gedges(:, 2) == next_node) | (Gedges(:, 2) == u & Gedges(:, 1) == next_node)) == 1);
     
-            stop_while = any(T.Edges.EndNodes == next_node, "all") | length(S.Edges.EndNodes) > (length(nodes) ./ 5);
-            
+            stop_while = any(T.Edges.EndNodes == next_node, "all") | length(S.Edges.EndNodes) > ((length(nodes) ./ 2 + 1)) | increment > 1000;
+            increment = increment + 1;
             node_already_connected = S.Edges.EndNodes(:, 1) == next_node;
             if any(node_already_connected)
                 assert(sum(node_already_connected) == 1) % each node should have only one connection
