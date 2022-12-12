@@ -39,6 +39,12 @@ p_idx = round(length(p) ./ 2);
 population_target = sum(table2array(G.Nodes(:, "vap"))) ./ 2; % total population / 2
 % population_bounds = population_target .* [0.95, 1.05];
 
+image_series_id = randsample(10^4, 1);
+image_series_dir = "figures/tree_split_series" + image_series_id;
+mkdir(image_series_dir);
+gif_file = image_series_dir + "tree_split.gif"
+image_id = 1;
+
 figure(1);
 clf;
 prev_error = 100; % percent
@@ -78,8 +84,10 @@ for ii = 1:length(p) - 1
     h = plot(T);
     % h = plot(T, 'XData', centroids(:,1), 'YData', centroids(:,2));
     highlight(h, first_half, "EdgeColor", "red", "NodeColor", "red");
+    title(sprintf("Deviation from one-half population = %.2f percent", percent_error))
     drawnow;
     pause(.1);
+    exportgraphics(h, gif_file, Append=true);
 
 %     if abs(percent_error) < 8 % percent
 %         break
