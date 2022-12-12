@@ -33,7 +33,7 @@ function T = spanning_tree(G)
             % Gedges = table2array(G.Edges);
             % assert(sum((Gedges(:, 1) == u & Gedges(:, 2) == next_node) | (Gedges(:, 2) == u & Gedges(:, 1) == next_node)) == 1);
     
-            stop_while = any(T.Edges.EndNodes == next_node, "all") | length(S.Edges.EndNodes) > ((length(nodes) ./ 2 + 1)) | increment > 1000;
+            stop_while = any(T.Edges.EndNodes == next_node, "all") | length(S.Edges.EndNodes) > ((length(nodes) ./ 2 + 1));
             increment = increment + 1;
             node_already_connected = S.Edges.EndNodes(:, 1) == next_node;
             if any(node_already_connected)
