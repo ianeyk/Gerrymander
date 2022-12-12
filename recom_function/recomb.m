@@ -58,7 +58,7 @@ mkdir("image_series/image_series_" + image_series_name);
 recomb_iterations = 100;
 for recomb_iteration = 1:recomb_iterations
 recomb_iteration
-try
+% try
 
 T = graph();
 while (length(T.Edges.EndNodes) < 1) % | (max(conncomp(T)) > 1)
@@ -111,6 +111,6 @@ saveas(plt, "image_series/image_series_" + image_series_name + "/image_series_" 
 
 % matching = G_iter.Nodes.district_id == G.Nodes.district_id;
 % sum_not_matching = sum(~matching)
-catch
-end
+% catch
+% end
 end
