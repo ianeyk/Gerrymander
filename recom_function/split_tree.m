@@ -80,7 +80,7 @@ function first_half = split_tree(G, T)
         highlight(h, first_half, "EdgeColor", "red", "NodeColor", "red");
         title(sprintf("Error = %.2f percent\n", percent_error));
         drawnow;
-        pause(.1);
+        % pause(.1);
 
     %     if abs(percent_error) < 8 % percent
     %         break
