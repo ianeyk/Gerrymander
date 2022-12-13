@@ -25,50 +25,31 @@ function first_half = split_tree(G, T)
     % Split the path p down the middle to determine the order of edges to try.
     % We will start with the edge in the middle, and then work our way outwards towards the extremes.
     % The idea is that the splitting point is likely to be near the middle of path p.
-    midpoint = length(p) / 2;
-    p2 = [flip(p(1:midpoint)); p(midpoint + 1:end)];
-    p_order = p2(:).';
-
     p_idx = round(length(p) ./ 2);
 
     %% Find balanced splitting point
 
-    population_target = sum(table2array(G.Nodes(:, "vap"))) ./ 2; % total population / 2
-    % population_bounds = population_target .* [0.95, 1.05];
+    population_target = sum(table2array(G.Nodes(:, "vap"))) ./ 2; % population of both districts / 2
 
     figure(1);
     clf;
     prev_error = 100; % percent
     stop_iteration = 0;
-    p_direction = 1; % positive or negative
+    p_direction = 16; % positive or negative
+    ready_to_quit = false;
     for ii = 1:length(p) - 1
         if p_idx == 1 || p_idx == length(p)
             break
         end
-        T_temp = rmedge(T, p(p_idx), p(p_idx + p_direction)); % create a copy of T which we can remove edges from
+        T_temp = rmedge(T, p(p_idx), p(p_idx + sign(p_direction))); % create a copy of T which we can remove edges from
 
         first_half = conncomp(T_temp) == 1; % find indices of nodes in the first connected component
         pop_of_first_half = sum(table2array(G.Nodes(first_half, "vap"))); % find the voting-age population among the first half
         percent_error = (pop_of_first_half - population_target) ./ population_target .* 100; % percent difference from desired population
 
-        if abs(percent_error) > abs(prev_error)
-            p_idx = p_idx - p_direction; % undo the last step
-            p_direction = -p_direction; % change directions
-            stop_iteration = stop_iteration + 1;
-
-            if stop_iteration >= 3
-                % recalculate nodes in the first half
-                T_temp = rmedge(T, p(p_idx), p(p_idx + p_direction)); % create a copy of T which we can remove edges from
-                first_half = conncomp(T_temp) == 1; % find indices of nodes in the first connected component
-                disp("Minimum error reached.")
-                fprintf("Minimum error margin was %.2f percent\n", percent_error)
-                break
-            end
-        end
-        prev_error = percent_error;
-
+        % display statistics
         iteration = ii; % for display
-        disp(table(iteration, percent_error))
+        disp(table(iteration, percent_error, p_direction))
 
         % Plot spanning tree with nodes colored.
         % Uncomment the first h= line to plot nodes as an abstract spanning tree
@@ -76,15 +57,32 @@ function first_half = split_tree(G, T)
         figure(2);
         clf;
         h = plot(T);
-%         h = plot(T, 'XData', centroids(:,1), 'YData', centroids(:,2));
+        %         h = plot(T, 'XData', centroids(:,1), 'YData', centroids(:,2));
         highlight(h, first_half, "EdgeColor", "red", "NodeColor", "red");
         title(sprintf("Error = %.2f percent\n", percent_error));
         drawnow;
         % pause(.1);
 
-    %     if abs(percent_error) < 8 % percent
-    %         break
-    %     end
+        % continue with algorithm
+        if ready_to_quit
+            disp("Minimum error reached.")
+            fprintf("Minimum error margin was %.2f percent\n", percent_error)
+            break
+        end
+
+        if abs(percent_error) > abs(prev_error)
+%             p_idx = p_idx - p_direction; % undo the last step
+            prev_direction = p_direction;
+            p_direction = floor(-p_direction ./ 2); % change directions
+            stop_iteration = stop_iteration + 1;
+
+            if abs(p_direction) == 1
+                ready_to_quit = true; % on the next iteration
+            end
+        end
+
+
+        prev_error = percent_error;
         p_idx = p_idx + p_direction;
     end
 end
