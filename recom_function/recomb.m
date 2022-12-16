@@ -11,14 +11,17 @@ mkdir("image_series/image_series_" + run_id);
 G_iter = G;
 
 % initialize all nodes to district_id = 1. Then pick 5 nodes to re-assign.This creates 1 massive district and 4 tiny ones
+n_new_districts = 30;
 G_iter.Nodes.district_id = zeros(height(G.Nodes), 1) + 1;
-node_ids_to_change = randsample(1:height(G.Nodes), 5);
-for gg = 1:5
+node_ids_to_change = randsample(1:height(G.Nodes), n_new_districts);
+for gg = 1:n_new_districts
     G_iter.Nodes.district_id(node_ids_to_change(gg)) = gg;
 end
 
 %%
-recomb_iterations = 100;
+save_every_n = 10;
+recomb_iterations = 2000;
+district_ids_after_iterations = zeros(length(G_iter.Nodes.district_id), recomb_iterations ./ save_every_n + 5);
 for recomb_iteration = 1:recomb_iterations
     recomb_iteration
     % try
@@ -57,4 +60,8 @@ for recomb_iteration = 1:recomb_iterations
 
     % catch
     % end
+    if mod(recomb_iteration, save_every_n) == 0
+        district_ids_after_iterations(:, ceil(recomb_iteration ./ save_every_n)) = G_iter.Nodes.district_id;
+    end
 end
+save("two_hundred_runs_01.mat", "district_ids_after_iterations");
