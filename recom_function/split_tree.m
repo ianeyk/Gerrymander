@@ -59,7 +59,7 @@ function first_half = split_tree(G, T)
         h = plot(T);
         %         h = plot(T, 'XData', centroids(:,1), 'YData', centroids(:,2));
         highlight(h, first_half, "EdgeColor", "red", "NodeColor", "red");
-        title(sprintf("Error = %.2f percent\n", percent_error));
+        title(sprintf("Spanning Tree Split Population Error = %.2f percent\n", percent_error));
         drawnow;
         % pause(.1);
 

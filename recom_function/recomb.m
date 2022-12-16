@@ -33,6 +33,7 @@ for recomb_iteration = 1:recomb_iterations
         figure(3);
         clf;
         plot(D);
+        title("Adjacent Districts By District ID")
 
         % pick a random edge from the district adjacency graph D and get the district_id's that correspond to the end nodes.
         two_district_ids = D.Edges.EndNodes(randsample(length(D.Edges.EndNodes), 1), :);
@@ -54,7 +55,8 @@ for recomb_iteration = 1:recomb_iterations
     figure(1);
     plt = plot(G_iter, 'XData', centroids(:,1), 'YData', centroids(:,2));
     plt.NodeCData = G_iter.Nodes.district_id;
-    colorbar
+    colorbar;
+    title(sprintf("District Map For %d Unique Districts After %d Iterations", n_new_districts, recomb_iteration));
     drawnow;
     saveas(plt, "image_series/image_series_" + run_id + "/image_series_" + run_id + "_" + recomb_iteration + ".png");
 

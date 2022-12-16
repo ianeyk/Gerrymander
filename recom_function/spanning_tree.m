@@ -4,7 +4,7 @@ function T = spanning_tree(G)
     nodes = randsample(all_nodes, length(all_nodes));
     %% Spanning Tree Algorithm
     T = graph(); % initialize final spanning tree
-    disp("Working... You will not see the first output for a few seconds.")
+%     disp("Working... You will not see the first output for a few seconds.")
 
     for nn = 1:length(nodes) % loop through every node to make sure it is in the final tree
         node = nodes(nn);
